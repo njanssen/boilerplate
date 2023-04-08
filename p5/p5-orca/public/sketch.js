@@ -18,7 +18,7 @@ function setup() {
 
     socket.on('data', (path, ...data) => {
         console.log('Orca data', path, data);
-        data = data.slice(0,height.length);
+        data = data.slice(0,heights.length);
         heights.splice(0,data.length,...data);
     });
 
