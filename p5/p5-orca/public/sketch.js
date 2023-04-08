@@ -1,7 +1,13 @@
-let size;
+const LERP_AMOUNT = 0.1;
 
+let size;
 let heights = Array.from(new Array(3), () => 0.5);
-const ys = {};
+
+const ys = {
+    y1_prev: heights[0],
+    y2_prev: heights[1],
+    y3_prev: heights[2]
+};
 
 function setup() {
     socket = io.connect('http://localhost:3000');
@@ -12,7 +18,8 @@ function setup() {
 
     socket.on('data', (path, ...data) => {
         console.log('Orca data', path, data);
-        heights = data;
+        data = data.slice(0,height.length);
+        heights.splice(0,data.length,...data);
     });
 
     size = min(windowWidth, windowHeight);
@@ -20,17 +27,14 @@ function setup() {
 }
 
 function draw() {
-    background(220, 220, 220,10);
+    background(220, 220, 220, 8);
 
     noFill();
-    strokeWeight((10 * size) / 150);
+    strokeWeight((10 * size) / 150);    
 
-    ys.y1_prev = ys.y1 ? ys.y1 : 0.5;
-    ys.y2_prev = ys.y2 ? ys.y2 : 0.5;
-    ys.y3_prev = ys.y3 ? ys.y3 : 0.5;
-    ys.y1 = lerp(ys.y1_prev, heights.length >= 1 ? heights[0] : 0.5, 0.3);
-    ys.y2 = lerp(ys.y2_prev, heights.length >= 2 ? heights[1] : 0.5, 0.3);
-    ys.y3 = lerp(ys.y3_prev, heights.length >= 3 ? heights[2] : 0.5, 0.3);
+    ys.y1 = lerp(ys.y1_prev, heights[0], LERP_AMOUNT);
+    ys.y2 = lerp(ys.y2_prev, heights[1], LERP_AMOUNT);
+    ys.y3 = lerp(ys.y3_prev, heights[2], LERP_AMOUNT);
 
     stroke(255, 0, 125, 90);
     circle(0.5 * size, ys.y1 * size, 0.45 * size);
@@ -40,4 +44,8 @@ function draw() {
 
     stroke(0, 125, 255, 90);
     circle(0.5 * size, ys.y3 * size, 0.55 * size);
+
+    ys.y1_prev = ys.y1;
+    ys.y2_prev = ys.y2;
+    ys.y3_prev = ys.y3;
 }
