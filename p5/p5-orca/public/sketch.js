@@ -10,7 +10,7 @@ const ys = {
 };
 
 function setup() {
-    socket = io.connect('http://localhost:3000');
+    socket = io.connect();
 
     socket.on('connect', function () {
         console.log('Connected to socket server');
@@ -27,10 +27,10 @@ function setup() {
 }
 
 function draw() {
-    background(220, 220, 220, 8);
+    background(220, 220, 220, 20);
 
     noFill();
-    strokeWeight((10 * size) / 150);    
+    strokeWeight((10 * size) / 100);    
 
     ys.y1 = lerp(ys.y1_prev, heights[0], LERP_AMOUNT);
     ys.y2 = lerp(ys.y2_prev, heights[1], LERP_AMOUNT);
